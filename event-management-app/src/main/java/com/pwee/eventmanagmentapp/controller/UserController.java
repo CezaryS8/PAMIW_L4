@@ -1,5 +1,6 @@
 package com.pwee.eventmanagmentapp.controller;
 
+import com.pwee.eventmanagmentapp.dto.UserDto;
 import com.pwee.eventmanagmentapp.entity.User;
 import com.pwee.eventmanagmentapp.exception.UserNotFoundException;
 import com.pwee.eventmanagmentapp.service.UserService;
@@ -20,9 +21,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         try {
-            User user = userService.getUserById(userId);
+            UserDto user = userService.getUserDtoById(userId);
             return ResponseEntity.ok(user);
         } catch (UserNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -30,29 +31,30 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @PostMapping("/")
-    public ResponseEntity<User> saveUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<UserDto> saveUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
 
-        User savedUser = userService.createUser(user);
+        UserDto savedUser = userService.createUser(user);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @Valid @RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
 
         user.setId(userId);
-        User updatedUser = userService.updateUser(user);
+        UserDto updatedUser = userService.updateUserWithoutPasswd(user);
         return ResponseEntity.ok(updatedUser);
     }
 
