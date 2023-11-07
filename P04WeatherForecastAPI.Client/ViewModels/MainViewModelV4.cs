@@ -41,23 +41,11 @@ namespace P04WeatherForecastAPI.Client.ViewModels
 
             _serviceProvider = serviceProvider;
 
-                // _serviceProvider= serviceProvider; 
-                //LoadCitiesCommand = new RelayCommand(x => LoadCities(x as string));
-                _accuWeatherService = accuWeatherService;
-            Cities = new ObservableCollection<CityViewModel>(); // podejście nr 2 
+            _accuWeatherService = accuWeatherService;
+            Cities = new ObservableCollection<CityViewModel>(); 
 
 
         }
-
-        //[ObservableProperty]
-        //private WeatherViewModel weatherView;
-        //public WeatherViewModel WeatherView { 
-        //    get { return weatherView; } 
-        //    set { 
-        //        weatherView = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
         [ObservableProperty]
         private WeatherViewModel weatherView;
 
@@ -83,13 +71,11 @@ namespace P04WeatherForecastAPI.Client.ViewModels
             }
         } 
 
-        // podajście nr 2 do przechowywania kolekcji obiektów:
         public ObservableCollection<CityViewModel> Cities { get; set; }
 
         [RelayCommand]
         public async void LoadCities(string locationName)
         {
-            // podejście nr 2:
             var cities = await _accuWeatherService.GetLocations(locationName);
             Cities.Clear();
             foreach (var city in cities) 
@@ -99,7 +85,6 @@ namespace P04WeatherForecastAPI.Client.ViewModels
         [RelayCommand]
         public void OpenFavotireCities()
         {
-            //var favoriteCitiesView = new FavoriteCitiesView();
             _favoriteCityViewModel.SelectedCity = new FavoriteCity() { Name = "Warsaw" };
             _favoriteCitiesView.Show();
         }
@@ -112,6 +97,16 @@ namespace P04WeatherForecastAPI.Client.ViewModels
 
             shopProductsView.Show();
             productsViewModel.GetProducts();
+        }
+
+        [RelayCommand]
+        public void OpenUserWindow()
+        {
+            UsersView usersView = _serviceProvider.GetService<UsersView>();
+            UsersViewModel productsViewModel = _serviceProvider.GetService<UsersViewModel>();
+
+            usersView.Show();
+            productsViewModel.GetUsers();
         }
     }
 }

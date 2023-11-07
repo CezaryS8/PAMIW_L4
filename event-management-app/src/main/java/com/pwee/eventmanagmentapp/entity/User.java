@@ -2,13 +2,21 @@ package com.pwee.eventmanagmentapp.entity;
 
 //import jakarta.persistence.GeneratedValue;
 //import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -17,6 +25,8 @@ import org.springframework.http.HttpStatus;
 @EqualsAndHashCode
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
     private Long id;
 
     @NotNull
@@ -34,5 +44,14 @@ public class User {
     @NotNull
     @Size(min=8)
     private String password;
+
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL
+    )
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
+    private List<Event> events = new ArrayList<>();
 
 }

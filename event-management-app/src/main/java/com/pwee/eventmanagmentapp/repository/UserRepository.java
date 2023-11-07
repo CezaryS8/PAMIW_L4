@@ -1,14 +1,8 @@
 package com.pwee.eventmanagmentapp.repository;
 
 import com.pwee.eventmanagmentapp.entity.User;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface UserRepository extends JpaRepository<User, Long> {
 
-@Repository
-public interface UserRepository {
-    List<User> findAllUsers();
-    User findUserById(Long id);
-    User saveUser(User user);
-    void deleteUserById(Long id);
 }
