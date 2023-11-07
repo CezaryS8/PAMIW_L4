@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using P04WeatherForecastAPI.Client.Configuration;
+using P04WeatherForecastAPI.Client.MessageBox;
 using P04WeatherForecastAPI.Client.Services.ProductServices;
 using P04WeatherForecastAPI.Client.Services.UserServices;
 using P04WeatherForecastAPI.Client.Services.WeatherServices;
@@ -67,6 +68,7 @@ namespace P04WeatherForecastAPI.Client
             services.AddSingleton<IFavoriteCityService, FavoriteCityService>();
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IMessageDialogService, WpfMesageDialogService>();
         }
 
         private void ConfigureViewModels(IServiceCollection services)
@@ -87,6 +89,7 @@ namespace P04WeatherForecastAPI.Client
             services.AddTransient<FavoriteCitiesView>();
             services.AddTransient<ShopProductsView>();
             services.AddTransient<UsersView>();
+            services.AddTransient<UserDetailsView>();
         }
 
         private void ConfigureHttpClients(IServiceCollection services, AppSettings appSettingsSection)

@@ -59,22 +59,26 @@ public class UserService {
                 .build();
     }
 
-    public void deleteUser(Long userId) {
+    public boolean deleteUser(Long userId) {
         userRepository.deleteById(userId);
+        if(userRepository.findById(userId).isPresent()) {
+            return false;
+        }
+        return true;
     }
 
     public UserDto updateUserWithoutPasswd(UserDto user) {
         User userInDb = userRepository.findById(user.getId()).orElseThrow(
                 () -> new UserNotFoundException("User doesn't exist! Nothing updated."));
 
-        userInDb
+
+
+        userRepository.save(userInDb
                 .toBuilder()
                 .name(user.getName())
                 .surname(user.getSurname())
                 .email(user.getEmail())
-                .build();
-
-        userRepository.save(userInDb);
+                .build());
 
         return user;
     }

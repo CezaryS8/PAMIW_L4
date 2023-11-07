@@ -30,7 +30,7 @@ public class EventController {
         return ResponseEntity.ok(event);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<EventDto>> getAllEvents() {
         List<EventDto> events = eventService.getAllEvents();
         return ResponseEntity.ok(events);

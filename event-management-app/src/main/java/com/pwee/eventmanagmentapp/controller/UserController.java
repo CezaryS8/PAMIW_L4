@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user")
 @AllArgsConstructor
-public class UserController {
+@Validated
+class UserController {
 
     private final UserService userService;
 
@@ -30,7 +32,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
@@ -47,20 +49,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto user, BindingResult bindingResult) {
+    @PutMapping("/")
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
 
-        user.setId(userId);
         UserDto updatedUser = userService.updateUserWithoutPasswd(user);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable Long userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Boolean> deleteUserById(@PathVariable Long userId) {
+        boolean deletionStatus = userService.deleteUser(userId);
+        if (deletionStatus) {
+            return ResponseEntity.ok(true); // Return true if the deletion was successful
+        } else {
+            return ResponseEntity.ok(false); // Return false if the deletion failed
+        }
     }
 }

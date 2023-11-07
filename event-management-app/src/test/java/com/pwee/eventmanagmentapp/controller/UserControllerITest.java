@@ -321,7 +321,7 @@ public class UserControllerITest {
     }
     private ResponseEntity<User[]> makeGetAllUsersRequest() {
         return restTemplate.getForEntity(
-                "http://localhost:" + port + "/api/v1/user/all",
+                "http://localhost:" + port + "/api/v1/user/",
                 User[].class
         );
     }
